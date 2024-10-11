@@ -27,6 +27,7 @@ class WarehouseSeeder extends Seeder
         DB::table('setting_details')->insert([
             [   
                 'company_name'=>"Tên công ty",
+                'web_title'=>"Tên công ty",
                 'phone'=>'0500363732',
                 'address'=>'Ywang Buôn Ma Thuột, Đăk Lăk',
             ],
@@ -34,7 +35,7 @@ class WarehouseSeeder extends Seeder
        
         DB::table('themesettings')->insert([
             [   
-                'title'=>"frontend",
+                'title'=>"frontend_tp",
             ],
         ]);
         DB::table('roles')->insert([
