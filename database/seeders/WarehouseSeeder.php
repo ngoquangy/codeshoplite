@@ -35,7 +35,7 @@ class WarehouseSeeder extends Seeder
        
         DB::table('themesettings')->insert([
             [   
-                'title'=>"frontend",
+                'title'=>"frontend_tp",
             ],
         ]);
         DB::table('roles')->insert([

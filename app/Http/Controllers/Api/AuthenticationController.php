@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Password;
 class AuthenticationController extends Controller
 {
     public function store()
@@ -58,4 +61,48 @@ class AuthenticationController extends Controller
     }
     
     //
+    public function saveNewUser(Request $request)
+    {
+        $this->validate($request,[
+            'full_name'=>'string|required',
+            'description'=>'string|nullable',
+            'phone'=>'string|required',
+            'email'=>'string|required',
+            'password'=>'string|required',
+            'address'=>'string|required',
+        ]);
+        $data = $request->all();
+
+        $olduser =\App\Models\User::where('phone',$data['phone'])->get();
+        if(count($olduser) > 0)
+            return response()->json([
+                'success' => false,
+                'message' => 'Số điện thoại đã tồn tại',
+            ], 200);
+        $olduser = \App\Models\User::where('email',$data['email'])->get();
+        if(count($olduser) > 0)
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Email đã tồn tại',
+                ], 200);
+        $data['photo'] = asset('backend/assets/dist/images/profile-6.jpg');
+        $data['password'] = Hash::make($data['password']);
+        $data['username'] = $data['phone'];
+        $data['role'] = 'customer';
+        $status = \App\Models\User::c_create($data);
+        if(!$status) 
+        {
+            return response()->json([
+                'success' => false,
+                'message' => 'Lỗi xảy ra',
+            ], 200);
+        }    
+        // $credentials = $request->only('email', 'password');
+        // \Auth::attempt($credentials);
+        // $request->session()->regenerate();
+        return response()->json([
+            'success' => true,
+            'message' => 'Đăng ký thành công',
+        ], 200);
+    }
 }
